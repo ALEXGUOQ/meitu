@@ -44,4 +44,9 @@ class Meinv(scrapy.Item):
 	count = scrapy.Field()
 	images = scrapy.Field()
 
+class Joke(scrapy.Item):
+	title = scrapy.Field()
+	content = scrapy.Field()
+	type = scrapy.Field()
+
 

@@ -3,6 +3,7 @@ import scrapy
 import re
 from meitu.items import Meinv
 
+# 抓取美女图
 class Spider_meinv(scrapy.Spider):
 	name = 'meinv'
 
