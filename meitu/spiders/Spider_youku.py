@@ -38,9 +38,14 @@ class Spider_youku(scrapy.Spider):
 			movice['name'] = name
 			movice['videoUrl'] = moviceUrl
 
-			yield movice
+			yield scrapy.Request(moviceUrl, callback=self.handleDetails,meta={"item",movice})
 
 		nextPage = response.xpath('//*[@id="listofficial"]/div[@class="yk-pager"]/ul/li[@class="next"]/a/@href').extract()
 		if nextPage:
 			nextpageUrl = self.pageUrl + nextPage[0]
 			yield scrapy.Request(nextpageUrl,callback=self.handleArea)
+
+
+	def handleDetails(self,response):
+		movice = response.meta['item']
+		print response.xpath('//*[@id="showInfo"]/div/ul/li[@class="action"]/a[@class="btnShow btnplayposi"]/@href').extract()
