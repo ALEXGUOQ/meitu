@@ -15,7 +15,7 @@ class Spider_jokeRanking(scrapy.Spider):
 
 	def parse(self, response):
 		pageCount = 0
-		for pages in response.xpath('//a[contains(@href, "keyword.asp?me_page=")]'):
+		for pages in response.xpath('//a[contains(@href, "hot.asp?me_page=")]'):
 			pageName = pages.xpath('./img/@alt').extract()
 			if pageName:
 				pageName = pageName[0]
@@ -25,6 +25,8 @@ class Spider_jokeRanking(scrapy.Spider):
 					mode = re.compile(r'\d+')
 					count = mode.findall(pageUrl)[0]
 					pageCount = int(count)
+
+					print  pageCount
 
 		pageCount += 1
 		for i in range(1,pageCount):
