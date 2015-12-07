@@ -112,15 +112,28 @@ class Spider_17k(scrapy.Spider):
 
 		for eachChapter in response.xpath('//div[@class="directory_con"]/div'):
 			for chapter in eachChapter.xpath('./ul/li'):
-				name = chapter.xpath('./a/text()').extract()
-				if name:
-					name = name[0]
+				# name = chapter.xpath('./a/text()').extract()
+				# if name:
+				# 	name = name[0]
 
 				url = chapter.xpath('./a/@href').extract()
 				if url:
 					url =self.chapterUrl + url[0]
+					yield scrapy.Request(url,callback=self.handleContent,meta={'book': book})
 
-				print {name : url}
-				book['chapters'].append({name:url})
+	def handleContent(self,response):
+		book = response.meta['book']
 
+		chapterName = response.xpath('//div[@id="readAreaBox"]/h1/text()').extract()
+		if chapterName:
+			chapterName = chapterName[0]
+
+		chapterContent = response.xpath('//div[@id="chapterContent"]/div[@id="chapterContentWapper"]/text()').extract()
+		if chapterName:
+			chapterName = chapterName[0]
+
+		if chapterName and chapterContent:
+			book['chapters'].append({chapterName:chapterContent})
 		return book
+
+

@@ -4,8 +4,28 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
+import pymysql
 
+def dbHandle():
+	conn = pymysql.connect(
+		host = 'localhost',
+		user = 'root',
+		passwd = '',
+		db='joke',
+		charset='utf8',
+		use_unicode= False
+	)
+	return conn
 
 class MeituPipeline(object):
-    def process_item(self, item, spider):
-        return item
+	def process_item(self, item, spider):
+		dbObject = dbHandle()
+		cursor = dbObject.cursor()
+		sql = "insert into joke.t_joke (title,content,type) values (%s,%s,%s)"
+
+		text = ''
+		for content in  item['content']:
+			text += content
+		cursor.execute(sql, (item['title'],text, item['type']))
+		dbObject.commit()
+		return item
