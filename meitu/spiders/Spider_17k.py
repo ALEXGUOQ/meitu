@@ -2,9 +2,9 @@
 import scrapy
 import re
 
-from meitu.items import Book
-
 # 抓取17k电子书中全本免费的电子书
+from book.items import Book
+
 class Spider_17k(scrapy.Spider):
 	name = "17k"
 
@@ -16,6 +16,8 @@ class Spider_17k(scrapy.Spider):
 
 	chapterUrl = "http://www.17k.com"
 
+	index = 0
+
 	#处理分类
 	def parse(self, response):
 		for eachType in response.xpath('//div[@class="fllist"]/div[1]/dl/dd'):
@@ -25,7 +27,7 @@ class Spider_17k(scrapy.Spider):
 					typeUrl = self.dictUrl + typeName[0]
 					yield scrapy.Request(typeUrl,callback=self.handleType)
 
-	# 处理分页
+	#处理分页
 	def handleType(self,response):
 		nextPage = response.xpath('//div[@class="search-list"]/div[@class="page"]/text()').extract()
 		pageCount = 0
@@ -39,7 +41,6 @@ class Spider_17k(scrapy.Spider):
 
 		nextPageUrl = response.xpath('//div[@class="search-list"]/div[@class="page"]/a[@class="on"]/@href').extract()
 		nextPageUrl = nextPageUrl[0]
-		print nextPageUrl
 		if nextPageUrl:
 			arr = nextPageUrl.split('_')
 			arr.pop()
@@ -94,7 +95,6 @@ class Spider_17k(scrapy.Spider):
 				requestUrl = self.dictUrl + item_details_url
 				yield scrapy.Request(requestUrl, callback=self.handleDictUrl, meta={'book': book})
 
-			yield book
 
 	# 处理调整页面
 	def handleDictUrl(self,response):
@@ -112,28 +112,38 @@ class Spider_17k(scrapy.Spider):
 
 		for eachChapter in response.xpath('//div[@class="directory_con"]/div'):
 			for chapter in eachChapter.xpath('./ul/li'):
-				# name = chapter.xpath('./a/text()').extract()
-				# if name:
-				# 	name = name[0]
+				name = chapter.xpath('./a/text()').extract()
+				if name:
+					name = name[0]
 
 				url = chapter.xpath('./a/@href').extract()
 				if url:
 					url =self.chapterUrl + url[0]
-					yield scrapy.Request(url,callback=self.handleContent,meta={'book': book})
+
+				if name and url:
+					book['chapters'].append({name:url})
+
+		for content in book['chapters']:
+			for contentUrl in content.values():
+				yield scrapy.Request(contentUrl,self.handleContent,meta={'item':book})
+
 
 	def handleContent(self,response):
-		book = response.meta['book']
-
-		chapterName = response.xpath('//div[@id="readAreaBox"]/h1/text()').extract()
-		if chapterName:
-			chapterName = chapterName[0]
+		requestUrl = response.url
+		book = response.meta['item']
 
 		chapterContent = response.xpath('//div[@id="chapterContent"]/div[@id="chapterContentWapper"]/text()').extract()
-		if chapterName:
-			chapterName = chapterName[0]
+		if chapterContent:
+			chapterContent = chapterContent[0]
 
-		if chapterName and chapterContent:
-			book['chapters'].append({chapterName:chapterContent})
-		return book
+		for content in book['chapters']:
+			for (k,v) in content.items():
+				if v == requestUrl:
+					content[k] = chapterContent
+
+		self.index += 1
+		if self.index == len(book['chapters']):
+			self.index = 0
+			return book
 
 

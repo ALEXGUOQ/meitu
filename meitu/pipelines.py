@@ -11,21 +11,23 @@ def dbHandle():
 		host = 'localhost',
 		user = 'root',
 		passwd = '',
-		db='joke',
+		db='books',
 		charset='utf8',
 		use_unicode= False
 	)
 	return conn
 
-class MeituPipeline(object):
+class BookPipeline(object):
+
 	def process_item(self, item, spider):
 		dbObject = dbHandle()
 		cursor = dbObject.cursor()
-		sql = "insert into joke.t_joke (title,content,type) values (%s,%s,%s)"
+		sql = "insert into books.book (name,type,author,count,chapters) values (%s,%s,%s,%s,%s)"
 
 		text = ''
-		for content in  item['content']:
-			text += content
-		cursor.execute(sql, (item['title'],text, item['type']))
+		for content in item['chapters']:
+			for value in content.values():
+				text += value
+		cursor.execute(sql, (item['name'],item['type'],item['author'],item['count'],text))
 		dbObject.commit()
 		return item

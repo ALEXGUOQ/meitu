@@ -1,4 +1,5 @@
 # encoding=utf8
+import random
 import urllib2, json
 
 
@@ -66,7 +67,7 @@ class ProxyPool:
             pass
 
         if self.ip_pool:
-            ip = self.ip_pool[self.cur]
+            ip = random.choice(self.ip_pool)
             self.cur += 1
 
         return ip
