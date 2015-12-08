@@ -3,7 +3,8 @@ import scrapy
 import re
 
 # 抓取17k电子书中全本免费的电子书
-from book.items import Book
+from meitu.items import Book
+
 
 class Spider_17k(scrapy.Spider):
 	name = "17k"
