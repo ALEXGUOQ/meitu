@@ -35,13 +35,17 @@ class Spider_joke(scrapy.Spider):
 			joke = Joke()
 			joke['type'] = '最新笑话'.decode('utf-8')
 			title = jokes.xpath('./b/a/text()').extract()
-			joke['title'] = title[0]
+			if title:
+				joke['title'] = title[0]
+			else:
+				continue
 
 			contentUrl = jokes.xpath('./b/a/@href').extract()
-			contentUrl = self.baseUrl + contentUrl[0]
-
-			yield scrapy.Request(contentUrl,callback=self.handleContent,meta={'joke':joke})
-
+			if contentUrl:
+				requestUrl = self.baseUrl + contentUrl[0]
+				yield scrapy.Request(requestUrl,callback=self.handleContent,meta={'joke':joke})
+			else:
+				continue
 
 	def handleContent(self,response):
 		joke = response.meta['joke']
@@ -51,5 +55,6 @@ class Spider_joke(scrapy.Spider):
 			if content:
 				joke['content'].append(content[0])
 
-		return joke
+		if joke['content']:
+			return joke
 
