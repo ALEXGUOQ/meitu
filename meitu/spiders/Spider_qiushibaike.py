@@ -29,20 +29,20 @@ class Spider_qiushibaike(scrapy.Spider):
 			if icon:
 				qiushi['icon'] = icon[0]
 			else:
-				qiushi['icon'] = ''
+				continue
 
 			name = eachItem.xpath('./div[1]/a[2]/h2/text()').extract()
 			if name:
 				qiushi['name'] = name[0]
 			else:
-				qiushi['name'] =''
+				continue
 
 			content = eachItem.xpath('./div[@class="content"]/text()').extract()
 			if content:
 				content = content[0]
 				qiushi['content'] = content
 			else:
-				qiushi['content'] = ''
+				continue
 
 			images = eachItem.xpath('./div[@class="thumb"]/a/img/@src').extract()
 			if images:

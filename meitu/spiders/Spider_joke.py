@@ -50,11 +50,12 @@ class Spider_joke(scrapy.Spider):
 	def handleContent(self,response):
 		joke = response.meta['joke']
 		joke['content'] = []
-		for contents in response.xpath('//span[@id="text110"]/p'):
-			content = contents.xpath('./text()').extract()
-			if content:
-				joke['content'].append(content[0])
 
-		if joke['content']:
+		content = response.xpath('//span[@id="text110"]').extract()
+		if content:
+			content = content[0]
+			lists = re.findall(r"<p>(.*?)</p>",content,re.I)
+			joke['content'] = lists
 			return joke
+
 

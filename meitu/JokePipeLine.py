@@ -26,7 +26,9 @@ class JokePipeLine(object):
 
 		text = ''
 		for content in item['content']:
-				text += content
-		cursor.execute(sql, (item['title'],item['type'],text))
-		dbObject.commit()
+				text += content.strip()
+		if text:
+			cursor.execute(sql, (item['title'],item['type'],text))
+			dbObject.commit()
+
 		return item
