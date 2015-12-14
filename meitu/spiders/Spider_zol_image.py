@@ -1,27 +1,26 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import re
-
 from meitu.items import Joke
 
-class Spider_zol(scrapy.Spider):
-	name = 'zolJoke'
+class Spider_zol_image(scrapy.Spider):
+	name = 'zolImage'
 
 	start_urls = [
-		'http://xiaohua.zol.com.cn/new/'
+		'http://xiaohua.zol.com.cn/qutu/'
 	]
 
 	baseUrl = 'http://xiaohua.zol.com.cn'
+
 
 	def parse(self, response):
 		for eachType in response.xpath('//div[@class="filter"]/div[@class="filter-links clearfix"]/a'):
 			type = eachType.xpath('./text()').extract()
 			if type:
-				jokeType = type[0]
+				type = type[0]
 				typeUrl = eachType.xpath('./@href').extract()[0]
 				requestUrl = self.baseUrl + typeUrl
 
-				yield scrapy.Request(requestUrl,callback=self.handleType,meta={'jokeType':jokeType})
+				yield scrapy.Request(requestUrl,callback=self.handleType,meta={'jokeType':type})
 
 	def handleType(self,response):
 		jokeType = response.meta['jokeType']
@@ -29,12 +28,11 @@ class Spider_zol(scrapy.Spider):
 		for eachItem in response.xpath('//ul[@class="article-list"]/li[@class="article-summary"]'):
 			joke = Joke()
 
-			joke['tag'] = 'txt'
+			joke['tag'] = 'image'
 
-			if jokeType:
+			if type:
 				joke['type'] = jokeType
 			else:
-				joke['type'] = ''
 				continue
 
 			title = eachItem.xpath('./span[@class="article-title"]/a/text()').extract()
@@ -44,32 +42,25 @@ class Spider_zol(scrapy.Spider):
 			else:
 				continue
 
-			contentUrl = eachItem.xpath('./span[@class="article-title"]/a/@href').extract()
-			if contentUrl:
-				detailUrl = self.baseUrl + contentUrl[0]
+			imageUrl = eachItem.xpath('./div[@class="summary-text"]/p/a/img/@src').extract()
+			if imageUrl:
+				imageUrl = imageUrl[0]
+			else:
+				imageUrl = eachItem.xpath('./div[@class="summary-text"]/p/a/img/@loadsrc').extract()
+				if imageUrl:
+					imageUrl = imageUrl[0]
 
-				detailUrl = 'http://xiaohua.zol.com.cn/detail47/46272.html'
-				yield scrapy.Request(detailUrl,callback=self.handleDetail,meta={'joke':joke})
+			if imageUrl:
+				joke['image'] = imageUrl
+
+			joke['content'] = ''
+			joke['video'] = ''
+			yield joke
 
 		nextPageUrl = response.xpath('//div[@class="page-box"]/div[@class="page"]/a[@class="page-next"]/@href').extract()
 		if nextPageUrl:
 			requestUrl = self.baseUrl + nextPageUrl[0]
 			yield scrapy.Request(requestUrl,callback=self.handleType,meta={'jokeType':jokeType})
-
-	def handleDetail(self,response):
-		joke = response.meta['joke']
-
-		content = response.xpath('//div[@class="article-text"]').extract()
-		if content:
-			dr = re.compile(r'<[^>]+>',re.S)
-			desc_nohtml = dr.sub('',content[0])
-			desc_nohtml = desc_nohtml.replace('\t','').replace('\n','').replace(' ','')
-			joke['content'] = desc_nohtml
-
-		joke['image'] = ''
-		joke['video'] = ''
-		return joke
-
 
 
 

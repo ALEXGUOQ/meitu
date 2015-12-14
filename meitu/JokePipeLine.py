@@ -22,13 +22,13 @@ class JokePipeLine(object):
 	def process_item(self,item,spider):
 		dbObject = dbHandle()
 		cursor = dbObject.cursor()
-		sql = "insert into joke.t_joke(title,type,content) values (%s,%s,%s)"
+		sql = "insert into joke.t_joke(title,type,content,tag,image,video) values (%s,%s,%s,%s,%s,%s)"
 
 		text = ''
 		for content in item['content']:
 				text += content.strip()
-		if text:
-			cursor.execute(sql, (item['title'],item['type'],text))
-			dbObject.commit()
+
+		cursor.execute(sql, (item['title'],item['type'],text,item['tag'],item['image'],item['video']))
+		dbObject.commit()
 
 		return item

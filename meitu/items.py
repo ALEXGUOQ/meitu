@@ -48,5 +48,16 @@ class Joke(scrapy.Item):
 	title = scrapy.Field()
 	content = scrapy.Field()
 	type = scrapy.Field()
+	tag = scrapy.Field() # 笑话的类型 txt 文本笑话 image : 趣图 video：搞笑视频
+	image = scrapy.Field()
+	video = scrapy.Field()
 
-
+class Jiandan(scrapy.Item):
+	icon = scrapy.Field()
+	title = scrapy.Field()
+	desc = scrapy.Field()
+	author = scrapy.Field()
+	authorUrl = scrapy.Field()
+	tag = scrapy.Field()
+	tagUrl = scrapy.Field()
+	content = scrapy.Field()
