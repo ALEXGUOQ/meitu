@@ -26,6 +26,7 @@ class Spider_jokeRanking(scrapy.Spider):
 					count = mode.findall(pageUrl)[0]
 					pageCount = int(count)
 
+					print  pageCount
 
 		pageCount += 1
 		for i in range(1,pageCount):

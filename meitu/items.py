@@ -49,14 +49,4 @@ class Joke(scrapy.Item):
 	content = scrapy.Field()
 	type = scrapy.Field()
 
-class Jiandan(scrapy.Item):
-	icon = scrapy.Field()
-	title = scrapy.Field()
-	desc = scrapy.Field()
-	tag = scrapy.Field()
-	tagUrl = scrapy.Field()
-	author = scrapy.Field()
-	authorUrl = scrapy.Field()
-	content = scrapy.Field()
-
 
