@@ -41,13 +41,17 @@ class Spider_jokeRanking(scrapy.Spider):
 
 			title = jokes.xpath('./tr/td[2]/a[@class="main_14"]/text()').extract()
 			if title:
-				joke['title'] = title
+				joke['title'] = title[0]
+			else:
+				continue
 
 			url = jokes.xpath('./tr/td[2]/a[@class="main_14"]/@href').extract()
 			if url:
 				url = url[0]
 				requestUrl = self.baseUrl + url
 				yield scrapy.Request(requestUrl,callback=self.handleContent,meta={'joke':joke})
+			else:
+				continue
 
 	def handleContent(self,response):
 		joke = response.meta['joke']
@@ -56,4 +60,6 @@ class Spider_jokeRanking(scrapy.Spider):
 			content = contents.xpath('./font/text()').extract()
 			if content:
 				joke['content'].append(content[0])
-		return joke
+
+		if joke['content']:
+			return joke

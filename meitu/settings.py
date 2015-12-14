@@ -62,7 +62,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-  # 'meitu.pipelines.BookPipeline': 1,
+   'meitu.pipelines.BookPipeline': 1,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

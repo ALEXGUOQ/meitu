@@ -20,7 +20,7 @@ class ProxyPool:
         self.ip_pool = self._read_ip_cache()
         self.cur = 0
         self.NUM = 100
-        self.MAIN_URL = """http://svip.kuaidaili.com/api/getproxy/?orderid=964706217943934&num=%d&b_pcchrome=1&b_pcie=1&b_pcff=1&b_android=1&b_iphone=1&b_ipad=1&carrier=1&protocol=1&method=2&an_an=1&an_ha=1&sp1=1&quality=2&sort=0&format=json&sep=1""" % (
+        self.MAIN_URL = """http://svip.kuaidaili.com/api/getproxy/?orderid=954974497840319&num=%d&b_pcchrome=1&b_pcie=1&b_pcff=1&b_android=1&b_iphone=1&b_ipad=1&carrier=1&protocol=1&method=2&an_an=1&an_ha=1&sp1=1&quality=2&sort=0&format=json&sep=1""" % (
             self.NUM)
 
     def _read_ip_cache(self):

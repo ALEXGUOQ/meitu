@@ -51,13 +51,18 @@ class Spider_jokeType(scrapy.Spider):
 		for jokes in response.xpath('//table[contains(@background, "images/")]'):
 			joke = Joke()
 			joke['type'] = type
-			title = jokes.xpath('./tr/td[2]/a[@class="main_14"]/text()').extract()[0]
-			joke['title'] = title
+			title = jokes.xpath('./tr/td[2]/a[@class="main_14"]/text()').extract()
+			if title:
+				joke['title'] = title[0]
+			else:
+				continue
 
-			url = jokes.xpath('./tr/td[2]/a[@class="main_14"]/@href').extract()[0]
-			requestUrl = self.baseUrl + url
-
-			yield scrapy.Request(requestUrl,callback=self.handleContent,meta={'joke':joke})
+			url = jokes.xpath('./tr/td[2]/a[@class="main_14"]/@href').extract()
+			if url:
+				requestUrl = self.baseUrl + url[0]
+				yield scrapy.Request(requestUrl,callback=self.handleContent,meta={'joke':joke})
+			else:
+				continue
 
 	def handleContent(self,response):
 		joke = response.meta['joke']
@@ -68,4 +73,5 @@ class Spider_jokeType(scrapy.Spider):
 			if content:
 				joke['content'].append(content[0])
 
-		return joke
+		if joke['content']:
+			return joke
