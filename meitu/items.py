@@ -37,6 +37,8 @@ class Book(scrapy.Item):
 	author = scrapy.Field()
 	count = scrapy.Field()
 	chapters = scrapy.Field()
+	count = scrapy.Field()
+	index = scrapy.Field()
 
 class Meinv(scrapy.Item):
 	title = scrapy.Field()
