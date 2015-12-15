@@ -45,7 +45,6 @@ class Spider_zol(scrapy.Spider):
 			if contentUrl:
 				detailUrl = self.baseUrl + contentUrl[0]
 
-				detailUrl = 'http://xiaohua.zol.com.cn/detail47/46272.html'
 				yield scrapy.Request(detailUrl,callback=self.handleDetail,meta={'joke':joke})
 
 		nextPageUrl = response.xpath('//div[@class="page-box"]/div[@class="page"]/a[@class="page-next"]/@href').extract()
