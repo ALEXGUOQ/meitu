@@ -28,7 +28,10 @@ class JokePipeLine(object):
 		for content in item['content']:
 				text += content.strip()
 
-		cursor.execute(sql, (item['title'],item['type'],text,item['tag'],item['image'],item['video']))
-		dbObject.commit()
+		try:
+			cursor.execute(sql, (item['title'],item['type'],text,item['tag'],item['image'],item['video']))
+			dbObject.commit()
+		except:
+			dbObject.rollback()
 
 		return item
