@@ -26,14 +26,18 @@ class Spider_jokeRanking(scrapy.Spider):
 					count = mode.findall(pageUrl)[0]
 					pageCount = int(count)
 
+					print  pageCount
+
 		pageCount += 1
 		for i in range(1,pageCount):
 			pageUrl = self.baseUrl + "/keyword.asp?me_page=" + str(i)
-			yield scrapy.Request(pageUrl,callback=self.handleJokes)
+			yield scrapy.Request(pageUrl,callback=self.handleJokes,meta={'type':type})
 
 	def handleJokes(self,response):
+		type = response.meta['type']
 		for jokes in response.xpath('//table[contains(@background, "images/")]'):
 			joke = Joke()
+			joke['type'] = type
 
 			title = jokes.xpath('./tr/td[2]/a[@class="main_14"]/text()').extract()
 			if title:
@@ -51,18 +55,11 @@ class Spider_jokeRanking(scrapy.Spider):
 
 	def handleContent(self,response):
 		joke = response.meta['joke']
-
-		type = response.xpath('//div[@class="main"]/div[@class="left"]/div[@class="left_up"]/h1/a[2]/text()').extract()
-		if type:
-			type = type[0]
-			joke['type'] = type
-		else:
-			joke['type'] = ""
-
 		joke['content'] = []
-		content = response.xpath('//span[@id="text110"]').extract()
-		if content:
-			content = content[0]
-			lists = re.findall(r"<p>(.*?)</p>",content,re.I)
-			joke['content'] = lists
+		for contents in response.xpath('//span[@id="text110"]/p'):
+			content = contents.xpath('./font/text()').extract()
+			if content:
+				joke['content'].append(content[0])
+
+		if joke['content']:
 			return joke

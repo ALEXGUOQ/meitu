@@ -11,24 +11,18 @@ def dbHandle():
 		host = 'localhost',
 		user = 'root',
 		passwd = '',
-		db='joke',
+		db='jiandan',
 		charset='utf8',
 		use_unicode= False
 	)
 	return conn
 
-class JokePipeLine(object):
+class JiandanPipeLine(object):
 
 	def process_item(self,item,spider):
 		dbObject = dbHandle()
 		cursor = dbObject.cursor()
-		sql = "insert into joke.t_joke(title,type,content,tag,image,video) values (%s,%s,%s,%s,%s,%s)"
-
-		text = ''
-		for content in item['content']:
-				text += content.strip()
-
-		cursor.execute(sql, (item['title'],item['type'],text,item['tag'],item['image'],item['video']))
+		sql = "insert into jiandan.t_jiandan(icon,title,desc,tag,tagUrl,author,authorUrl,content) values (%s,%s,%s,%s,%s,%s,%s,%s)"
+		cursor.execute(sql, (item['icon'],item['title'],item['desc'],item['tag'],item['tagUrl'],item['author'],item['authorUrl'],item['content']))
 		dbObject.commit()
-
 		return item
