@@ -64,6 +64,8 @@ class Spider_zol(scrapy.Spider):
 			desc_nohtml = dr.sub('',content[0])
 			desc_nohtml = desc_nohtml.replace('\t','').replace('\n','').replace(' ','')
 			joke['content'] = desc_nohtml
+		else:
+			joke['content'] = ''
 
 		joke['image'] = ''
 		joke['video'] = ''
