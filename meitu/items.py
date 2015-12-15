@@ -61,3 +61,9 @@ class Jiandan(scrapy.Item):
 	tag = scrapy.Field()
 	tagUrl = scrapy.Field()
 	content = scrapy.Field()
+
+class Baike(scrapy.Item):
+	type = scrapy.Field()
+	icon = scrapy.Field()
+	title = scrapy.Field()
+	content = scrapy.Field()
