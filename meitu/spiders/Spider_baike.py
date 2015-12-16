@@ -5,7 +5,6 @@ import re
 
 from meitu.items import Baike
 
-
 class Spider_baike(scrapy.Spider):
 	name = "baike"
 
@@ -18,13 +17,11 @@ class Spider_baike(scrapy.Spider):
 			title = eachType.xpath('./a/text()').extract()
 			if title:
 				title = title[0]
-				print title
 
 			for subType in eachType.xpath('./div[@class="mega-menu-block"]/ul[@class="sub-menu"]/li'):
 				subTypeName = subType.xpath('./a/text()').extract()
 				if subTypeName:
 					subTypeName = subTypeName[0]
-
 
 				subTypeUrl = subType.xpath('./a/@href').extract()
 				if subTypeUrl:
@@ -39,8 +36,6 @@ class Spider_baike(scrapy.Spider):
 
 			if subType:
 				baike['type'] = subType
-			else:
-				continue
 
 			title = eachItem.xpath('./h2/a/text()').extract()
 			if title:
@@ -62,6 +57,22 @@ class Spider_baike(scrapy.Spider):
 
 				yield scrapy.Request(detailUrl,callback=self.handleDetail,meta={'item':baike})
 
+		for eachPage in response.xpath('//div[@class="pages"]/li'):
+			pageName = eachPage.xpath('./a/text()').extract()
+			nextPageUrl = eachPage.xpath('./a/@href').extract()
+
+			if pageName:
+				pageName = pageName[0]
+
+				if pageName == '下一页'.decode('utf-8'):
+					if nextPageUrl:
+						nextPageUrl = nextPageUrl[0]
+
+						url = response.url
+						urlArrs = url.split('list_')
+						requestUrl = urlArrs[0] + nextPageUrl
+						yield scrapy.Request(requestUrl,callback=self.handleItem,meta={'type':subType})
+
 	def handleDetail(self,response):
 		baike = response.meta['item']
 
@@ -69,7 +80,13 @@ class Spider_baike(scrapy.Spider):
 		if detail:
 			dr = re.compile(r'<[^>]+>',re.S)
 			desc_nohtml = dr.sub('',detail[0])
-			desc_nohtml = desc_nohtml.encode('utf-8')
-			desc_nohtml = desc_nohtml.replace('\t','').replace('\n','').replace(' ','')
+			p = re.compile('\s+')
+			desc_nohtml = re.sub(p, '', desc_nohtml)
+
+			p = re.compile('(?<=[/*])[\s\S]*(?=";)')
+			desc_nohtml = re.sub(p, '', desc_nohtml)
+
+			desc_nohtml = re.sub('/";', '', desc_nohtml)
+
 			baike['content'] = desc_nohtml
 			return baike
