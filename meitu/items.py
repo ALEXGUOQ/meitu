@@ -67,3 +67,20 @@ class Baike(scrapy.Item):
 	icon = scrapy.Field()
 	title = scrapy.Field()
 	content = scrapy.Field()
+
+class Dog(scrapy.Item):
+	name = scrapy.Field()
+	alias = scrapy.Field()
+	englishName = scrapy.Field()
+	type = scrapy.Field()
+	function = scrapy.Field()
+	hair = scrapy.Field()
+	height = scrapy.Field()
+	weight = scrapy.Field()
+	lifeTime = scrapy.Field()
+	sourceArea = scrapy.Field()
+	price = scrapy.Field()
+	detail = scrapy.Field()
+	FCIStandard = scrapy.Field()
+	animType = scrapy.Field() # 动物的类型：dog：狗 cat: 猫
+

@@ -64,7 +64,8 @@ DOWNLOADER_MIDDLEWARES = {
 ITEM_PIPELINES = {
    # 'meitu.pipelines.BookPipeline': 1,
    # 'meitu.JokePipeLine.JokePipeLine': 1,
-   'meitu.BaikePipeLine.BaikePipeLine': 1,
+   # 'meitu.BaikePipeLine.BaikePipeLine': 1,
+   'meitu.DogPipeLine.DogPipeLine': 1,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
