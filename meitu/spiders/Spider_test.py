@@ -1,8 +1,6 @@
 import scrapy
 import re
 
-
-
 def filter_tags(content,tag):
 	re_tag = r'<%s(.*?)>(.*?)<\/%s>'%(tag,tag)
 	dr = re.compile(re_tag,re.S)

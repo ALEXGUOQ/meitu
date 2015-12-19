@@ -5,6 +5,7 @@ import re
 
 from meitu.items import Baike
 
+
 class Spider_baike(scrapy.Spider):
 	name = "baike"
 
@@ -22,11 +23,14 @@ class Spider_baike(scrapy.Spider):
 				subTypeName = subType.xpath('./a/text()').extract()
 				if subTypeName:
 					subTypeName = subTypeName[0]
+					print subTypeName
 
 				subTypeUrl = subType.xpath('./a/@href').extract()
 				if subTypeUrl:
 					subTypeUrl = subTypeUrl[0]
 					yield scrapy.Request(subTypeUrl,callback=self.handleItem,meta={'type':subTypeName})
+				break
+			break
 
 	def handleItem(self,response):
 		subType = response.meta['type']
@@ -41,6 +45,7 @@ class Spider_baike(scrapy.Spider):
 			if title:
 				title = title[0]
 				baike['title'] = title
+				print title
 			else:
 				continue
 
@@ -56,6 +61,7 @@ class Spider_baike(scrapy.Spider):
 				detailUrl = detailUrl[0]
 
 				yield scrapy.Request(detailUrl,callback=self.handleDetail,meta={'item':baike})
+			break
 
 		for eachPage in response.xpath('//div[@class="pages"]/li'):
 			pageName = eachPage.xpath('./a/text()').extract()
@@ -72,21 +78,51 @@ class Spider_baike(scrapy.Spider):
 						urlArrs = url.split('list_')
 						requestUrl = urlArrs[0] + nextPageUrl
 						yield scrapy.Request(requestUrl,callback=self.handleItem,meta={'type':subType})
+			break
 
 	def handleDetail(self,response):
 		baike = response.meta['item']
 
-		detail = response.xpath('//div[@class="post-inner"]/div[@class="entry"]').extract()
-		if detail:
-			dr = re.compile(r'<[^>]+>',re.S)
-			desc_nohtml = dr.sub('',detail[0])
-			p = re.compile('\s+')
-			desc_nohtml = re.sub(p, '', desc_nohtml)
+		details = response.xpath('//div[@class="entry"]//p').extract()
+		text = ''
+		for detail in details:
+			if detail :
+				detail = detail.encode('utf-8')
+				detail = re.sub("<p.*?>", '',detail)
+				detail = re.sub("<\/p>", '',detail)
 
-			p = re.compile('(?<=[/*])[\s\S]*(?=";)')
-			desc_nohtml = re.sub(p, '', desc_nohtml)
+				detail = re.sub("<a.*?>", '',detail)
+				detail = re.sub("<\/a>", '',detail)
 
-			desc_nohtml = re.sub('/";', '', desc_nohtml)
+				dr = re.compile(r'<img(.*?)>(.*?)',re.S)
+				detail = dr.sub('',detail)
 
-			baike['content'] = desc_nohtml
+				dr = re.compile(r'<strong(.*?)>(.*?)<\/strong>',re.S)
+				detail = dr.sub('',detail)
+
+				dr = re.compile(r'<span(.*?)>(.*?)<\/span>',re.S)
+				detail = dr.sub('',detail)
+
+				p = re.compile('\s+')
+				detail = re.sub(p, '', detail)
+				text += detail
+
+			baike['content'] = text
 			return baike
+
+		# baike = response.meta['item']
+		#
+		# detail = response.xpath('//div[@class="post-inner"]/div[@class="entry"]').extract()
+		# if detail:
+		# 	dr = re.compile(r'<[^>]+>',re.S)
+		# 	desc_nohtml = dr.sub('',detail[0])
+		# 	p = re.compile('\s+')
+		# 	desc_nohtml = re.sub(p, '', desc_nohtml)
+		#
+		# 	p = re.compile('(?<=[/*])[\s\S]*(?=";)')
+		# 	desc_nohtml = re.sub(p, '', desc_nohtml)
+		#
+		# 	desc_nohtml = re.sub('/";', '', desc_nohtml)
+		#
+		# 	baike['content'] = desc_nohtml
+		# 	return baike
