@@ -7,6 +7,15 @@
 
 import scrapy
 
+class Douban(scrapy.Item):
+	rank = scrapy.Field()
+	icon = scrapy.Field()
+	title = scrapy.Field()
+	director = scrapy.Field()
+	quote = scrapy.Field()
+	comments = scrapy.Field()
+	detailUrl = scrapy.Field()
+
 class MeituItem(scrapy.Item):
 	viewUrl = scrapy.Field()
 	image = scrapy.Field()

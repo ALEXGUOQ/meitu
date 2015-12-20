@@ -65,8 +65,10 @@ ITEM_PIPELINES = {
    # 'meitu.pipelines.BookPipeline': 1,
    # 'meitu.JokePipeLine.JokePipeLine': 1,
    # 'meitu.BaikePipeLine.BaikePipeLine': 1,
-   'meitu.DogPipeLine.DogPipeLine': 1,
+   # 'meitu.DogPipeLine.DogPipeLine': 1,
+    'meitu.DoubanPipeLine.DoubanPipeLine': 1,
 }
+
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
