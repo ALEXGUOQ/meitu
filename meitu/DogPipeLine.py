@@ -39,8 +39,7 @@ class DogPipeLine(object):
 		if item['FCIStandard']:
 			FCIStandard = item['FCIStandard']
 
-
-		sql = "insert into joke.t_dog(name,alias,englishName,type,function,hair,height,weight,lifeTime,sourceArea,price,detail,FCIStandard) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-		cursor.execute(sql, (item['name'],item['alias'],englishName,item['type'],item['function'],hair,item['height'],item['weight'],item['lifeTime'],item['sourceArea'],item['price'],item['detail'],FCIStandard))
+		sql = "insert into joke.t_dog(name,alias,englishName,type,function,hair,height,weight,lifeTime,sourceArea,price,detail,FCIStandard,animType) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+		cursor.execute(sql, (item['name'],item['alias'],englishName,item['type'],item['function'],hair,item['height'],item['weight'],item['lifeTime'],item['sourceArea'],item['price'],item['detail'],FCIStandard,item['animType']))
 		dbObject.commit()
 		return item

@@ -48,6 +48,7 @@ class Spider_dog(scrapy.Spider):
 			dog['lifeTime'] = filterHtmlTag(details[8],'dd')
 			dog['sourceArea'] = filterHtmlTag(details[9],'dd')
 			dog['price'] = filterHtmlTag(details[10],'dd')
+			dog['FCIStandard'] = ''
 
 		desc = response.xpath('/html/body/main/dl[1]/db/a/@href').extract()
 		if desc:

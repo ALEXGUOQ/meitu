@@ -93,3 +93,20 @@ class Dog(scrapy.Item):
 	FCIStandard = scrapy.Field()
 	animType = scrapy.Field() # 动物的类型：dog：狗 cat: 猫
 
+
+class DoubanMusic(scrapy.Item):
+	icon = scrapy.Field()
+	title = scrapy.Field()
+	meta = scrapy.Field()
+	lists = scrapy.Field()
+
+class Xiachufang(scrapy.Item):
+	icon = scrapy.Field()
+	title = scrapy.Field()
+	type = scrapy.Field() # 大的菜系名
+	subType = scrapy.Field() # 子菜系名:列表
+
+class Greens(scrapy.Item):
+	icon = scrapy.Field()
+	title = scrapy.Field()
+	detail = scrapy.Field()
