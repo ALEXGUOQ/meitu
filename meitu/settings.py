@@ -66,8 +66,8 @@ ITEM_PIPELINES = {
    # 'meitu.JokePipeLine.JokePipeLine': 1,
    # 'meitu.BaikePipeLine.BaikePipeLine': 1,
    # 'meitu.DogPipeLine.DogPipeLine': 1,
-   #  'meitu.DoubanPipeLine.DoubanPipeLine': 1,
-     'meitu.MusicPipeLine.MusicPipeLine': 1,
+    'meitu.DoubanPipeLine.DoubanPipeLine': 1,
+     # 'meitu.MusicPipeLine.MusicPipeLine': 1,
 }
 
 

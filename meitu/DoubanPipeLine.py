@@ -22,7 +22,14 @@ class DoubanPipeLine(object):
 	def process_item(self,item,spider):
 		dbObject = dbHandle()
 		cursor = dbObject.cursor()
-		sql = "insert into joke.t_movice(rank,icon,title,director,quote,comments,detailUrl) values (%s,%s,%s,%s,%s,%s,%s)"
-		cursor.execute(sql, (item['rank'],item['icon'],item['title'],item['director'],item['quote'],item['comments'],item['detailUrl']))
+		sql = "insert into joke.t_doubanMovice(title,movieInfo,star,quote) values (%s,%s,%s,%s)"
+		cursor.execute(sql, (item['title'],item['movieInfo'],item['star'],item['quote']))
 		dbObject.commit()
 		return item
+
+		# dbObject = dbHandle()
+		# cursor = dbObject.cursor()
+		# sql = "insert into joke.t_movice(rank,icon,title,director,quote,comments,detailUrl) values (%s,%s,%s,%s,%s,%s,%s)"
+		# cursor.execute(sql, (item['rank'],item['icon'],item['title'],item['director'],item['quote'],item['comments'],item['detailUrl']))
+		# dbObject.commit()
+		# return item

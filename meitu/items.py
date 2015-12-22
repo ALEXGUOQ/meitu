@@ -110,3 +110,14 @@ class Greens(scrapy.Item):
 	icon = scrapy.Field()
 	title = scrapy.Field()
 	detail = scrapy.Field()
+
+
+class DoubanmovieItem(scrapy.Item):
+    # define the fields for your item here like:
+    # name = scrapy.Field()
+    title = scrapy.Field()
+    movieInfo = scrapy.Field()
+    star = scrapy.Field()
+    quote = scrapy.Field()
+
+
